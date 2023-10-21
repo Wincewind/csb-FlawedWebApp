@@ -1,0 +1,53 @@
+[
+    {
+      "model": "auth.user",
+      "pk": 1,
+      "fields": {
+        "username": "mike",
+        "password": "pbkdf2_sha256$600000$kmcPsffkDPZG4NfoXXvwGr$fKBqgBzj+K71GYk+gFk8EcQVm2uE4yO4aeBjv7EtW98=",
+        "is_staff": true
+      }
+    },
+    {
+      "model": "auth.user",
+      "pk": 2,
+      "fields": {
+        "username": "hacker5000",
+        "password": "pbkdf2_sha256$600000$0xwMkTsyvgsBIkWUf7qfS8$MGq4aG4Gv8tFWt+tMuoRYZgmyXLnuRiIOiJSlWBdroA=",
+        "is_staff": false
+      }
+    },
+    {
+      "model": "auth.user",
+      "pk": 3,
+      "fields": {
+        "username": "sarah",
+        "password": "pbkdf2_sha256$600000$13lm7HppKNX5O77aIIBCbq$IguUvH5wPs1yybj0q8X1P5Gaq1D8IoDlJO+obe0Iu7k=",
+        "is_staff": false
+      }
+    },
+    {
+      "model": "flawedsite.Account",
+      "pk": 1,
+      "fields": {
+        "user_id": 1,
+        "super_secret": "I hate my job..."
+      }
+    },
+    {
+      "model": "flawedsite.Account",
+      "pk": 2,
+      "fields": {
+        "user_id": 2,
+        "super_secret": "All Your Base Are Belong To Us"
+      }
+    },
+    {
+      "model": "flawedsite.Account",
+      "pk": 3,
+      "fields": {
+        "user_id": 3,
+        "super_secret": "I'm afraid of snakes!"
+      }
+    }
+  ]
