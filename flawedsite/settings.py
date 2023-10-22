@@ -119,14 +119,21 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+
+# Security Logging and Monitoring Failure:
+# No logs are currently collected and possible Broken Access Control or
+# Injection issues are left unrecorded. Removing the comment from below setting,
+# will enable collection of logs that will be visible from the file, even if the site crashes.
+
 # LOGGING = {
 #     "version": 1,
 #     "disable_existing_loggers": False,
 #     "handlers": {
 #         "file": {
-#             "level": "DEBUG",
+#             "level": "INFO",
 #             "class": "logging.FileHandler",
-#             "filename": "flawedsite/templates/pages/debug.log",
+#             "filename": "logs/debug.log",
+#             "formatter": "verbose",
 #         },
 #     },
 #     "loggers": {
@@ -134,6 +141,16 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 #             "handlers": ["file"],
 #             "level": "DEBUG",
 #             "propagate": True,
+#         },
+#     },
+#     "formatters": {
+#         "verbose": {
+#             "format": "{name} {levelname} {asctime} {module} {process:d} {thread:d} {message}",
+#             "style": "{",
+#         },
+#         "simple": {
+#             "format": "{levelname} {message}",
+#             "style": "{",
 #         },
 #     },
 # }

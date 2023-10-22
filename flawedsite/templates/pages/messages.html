@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+    {% with messages=messages %}
+        {% if messages %}
+            <script>
+            var messages = [];
+            {% for message in messages %}
+                messages.push("{{ message|escapejs }}");
+            {% endfor %}
+            for (var i = 0; i < messages.length; i++) {
+                alert(messages[i]);
+            }
+            </script>
+        {% endif %}
+    {% endwith %}

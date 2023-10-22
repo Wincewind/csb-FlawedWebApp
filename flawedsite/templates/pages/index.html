@@ -1,1 +1,11 @@
-Hello world
+<center>
+    Hello {{ user.username }}!
+    <br>
+    <a href="/secret/{{user.id}}">View my super secret</a>
+    <br>
+    <br>
+    <form action='logout' method="POST">
+        {% csrf_token %}
+        <input type="submit" value="Logout"/>
+    </form>
+</center>
