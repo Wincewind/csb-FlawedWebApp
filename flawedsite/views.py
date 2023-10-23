@@ -1,4 +1,5 @@
-from django.http import HttpResponse, HttpRequest
+import sqlite3
+import logging
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
@@ -7,10 +8,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from django.contrib import messages
 from django.core.exceptions import ValidationError
-import sqlite3
-import logging
 from flawedsite.models import Account
-from django_cryptography.fields import encrypt
 
 logger = logging.getLogger('django')
 
