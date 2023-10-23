@@ -10,6 +10,7 @@ from django.core.exceptions import ValidationError
 import sqlite3
 import logging
 from flawedsite.models import Account
+from django_cryptography.fields import encrypt
 
 logger = logging.getLogger('django')
 
@@ -20,24 +21,31 @@ def index(request):
 def signup(request):
 	identification_and_authentication_failure_fix = False # <-- Set this to True to fix the password validation
 	if request.method == 'POST':
-		new_user = User()
-		new_user.username = request.POST["username"]
-		new_user.email = request.POST["email"]
-		new_user.set_password(request.POST["password"])
-		if identification_and_authentication_failure_fix:
-			try:
-				validate_password(request.POST["password"], new_user)
-				new_user.save()
-				new_acc = Account()
-				new_acc.user = new_user
-				new_acc.save()
-				return redirect('/')
-			except ValidationError as ex:
-				messages.add_message(request, messages.ERROR, "\n".join(ex.messages))
+		empty_account_details = []
+		for val in request.POST:
+			if len(request.POST[val]) == 0:
+				empty_account_details.append(val)
+		if len(empty_account_details) > 0:
+			messages.add_message(request, messages.ERROR, "Required information missing:\n"+"\n".join(empty_account_details))
 		else:
-			new_user.save()
+			new_user = User()
+			new_user.username = request.POST["username"]
+			new_user.email = request.POST["email"]
+			new_user.set_password(request.POST["password"])
+			if identification_and_authentication_failure_fix:
+				try:
+					validate_password(request.POST["password"], new_user)
+					new_user.save()
+				except ValidationError as ex:
+					messages.add_message(request, messages.ERROR, "\n".join(ex.messages))
+					return render(request, 'pages/signup.html')
+			else:
+				new_user.save()
 			new_acc = Account()
 			new_acc.user = new_user
+			new_acc.pw_recovery_q =request.POST["recovery_q"]
+			new_acc.pw_recovery_a =request.POST["recovery_a"]
+			new_acc.ssn = request.POST["ssn"]
 			new_acc.save()
 			return redirect('/')
 	return render(request, 'pages/signup.html')
@@ -66,5 +74,50 @@ def secret(request, uid):
 			conn.commit()
 		logger.info(msg=f"User {request.user.id} edited user's {uid} secret to '{new_secret}'")
 
-	user_secret = Account.objects.get(user_id=uid).super_secret
-	return render(request, "pages/secret.html", {'secret':user_secret})
+	user_acc = Account.objects.get(user_id=uid)
+	return render(request, "pages/secret.html", {'secret':user_acc.super_secret})
+
+def recovery_init(request):
+	recovery_q = None
+	username = None
+	if request.method == 'POST':
+		try:
+			user = User.objects.get(username=request.POST['username'])
+		except Exception:
+			return redirect('recovery_init')
+
+		if user is not None:
+			username = request.POST['username']
+			user_acc = Account.objects.get(user_id=user.pk)
+			recovery_q = user_acc.pw_recovery_q
+	return render(request, "pages/recovery.html", {'username':username, 'recovery_q':recovery_q})
+
+def recovery_attempt(request):
+	if request.method == 'POST':
+		user = User.objects.get(username=request.POST['username'])
+		if user is not None:
+			user_acc = Account.objects.get(user_id=user.pk)
+			if request.POST['answer'].lower() == user_acc.pw_recovery_a.lower():
+				request.session['uid'] = user.pk
+				return render(request, "pages/recovery.html",{'correct_answer':True,'user_id':user.pk,'username':request.POST['username']})
+			else:
+				messages.add_message(request, messages.ERROR, "Wrong answer to the question!")
+	return redirect('/')
+
+def change_pw(request):
+	uid = ''
+	if 'uid' in request.session:
+		uid = request.session['uid']
+		del request.session['uid']
+	if request.method == 'POST' and str(uid) == request.POST['user_id']:
+		user = User.objects.get(pk=request.POST['user_id'])
+		user.set_password(request.POST['new_pw'])
+		user.save()
+	return redirect('/')
+
+def email_recovery(request):
+	if request.method == 'POST':
+		print(f'sending mail to {request.POST["recovery_email"]}')
+		messages.add_message(request, messages.INFO, "If the email address you entered matches one we have recorded, we will send you a temporary password to access the account.")
+		return redirect('/')
+	return render(request, 'pages/recovery_email.html')

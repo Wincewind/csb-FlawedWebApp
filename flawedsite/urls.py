@@ -18,7 +18,9 @@ from django.contrib import admin
 from django.urls import path
 from django.contrib.auth.views import LoginView, LogoutView
 
-from .views import index, signup, secret
+from .views import index, signup, secret, recovery_init, recovery_attempt, change_pw, email_recovery
+
+insecure_design_fix = False
 
 urlpatterns = [
     path('', index, name='index'),
@@ -28,3 +30,14 @@ urlpatterns = [
 	path('secret/<int:uid>', secret, name='secret'),
     path("admin/", admin.site.urls),
 ]
+
+if insecure_design_fix:
+    urlpatterns.append(path('recovery_init', email_recovery, name='email_recovery'))
+else:
+    urlpatterns.extend(
+        [
+        path('recovery_init', recovery_init, name='recovery_init'),
+        path('recovery_attempt', recovery_attempt, name='recovery_attempt'),
+        path('change_pw', change_pw, name='change_pw'),
+    ]
+    )

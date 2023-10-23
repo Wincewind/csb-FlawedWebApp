@@ -31,7 +31,10 @@
       "pk": 1,
       "fields": {
         "user_id": 1,
-        "super_secret": "I hate my job..."
+        "super_secret": "I hate my job...",
+        "pw_recovery_q": "My favourite color",
+        "pw_recovery_a": "Blue",
+        "ssn": "010101-100X"
       }
     },
     {
@@ -39,7 +42,10 @@
       "pk": 2,
       "fields": {
         "user_id": 2,
-        "super_secret": "All Your Base Are Belong To Us"
+        "super_secret": "All Your Base Are Belong To Us",
+        "pw_recovery_q": "My first pet",
+        "pw_recovery_a": "Dog",
+        "ssn": "010101-100X"
       }
     },
     {
@@ -47,7 +53,11 @@
       "pk": 3,
       "fields": {
         "user_id": 3,
-        "super_secret": "I'm afraid of snakes!"
+        "super_secret": "I'm afraid of snakes!",
+        "pw_recovery_q": "My favourite color",
+        "pw_recovery_a": "Red",
+        "ssn": "010101-100X"
+
       }
     }
   ]

@@ -1,0 +1,28 @@
+<center>
+    {% if username is none %}
+    <form action="recovery_init" method="POST">
+        {% csrf_token %}
+        <label for="username">Input your username</label>
+        <input type="text" name="username">
+    </form>
+    {% endif %}
+
+    {% if recovery_q is not none %}
+        <form action="recovery_attempt" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="username" value="{{ username }}">
+            <label for="answer">{{ recovery_q }}</label>
+            <input type="text" name="answer">
+        </form>
+    {% endif %}
+
+    {% if correct_answer is not none %}
+        <h1>Correct answer!</h1>
+        <form action="change_pw" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="user_id" value="{{ user_id }}">
+            <label for="new_pw">New password:</label>
+            <input type="password" name="new_pw">
+        </form>
+    {% endif %}
+</center>

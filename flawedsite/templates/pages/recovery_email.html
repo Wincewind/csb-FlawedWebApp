@@ -1,0 +1,9 @@
+<center>
+    <h1>Forgot Password</h1>
+    <form action="recovery_init" method="POST">
+        {% csrf_token %}
+        <label for="recovery_email">Enter the email address associated with your account.</label>
+        <br>
+        <input type="text" name="recovery_email">
+    </form>
+</center>
